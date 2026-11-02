@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>2027 Family Reunion · Greensboro, NC</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@800&family=Gelasio:wght@400;600&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #2b1b3d;      /* deep plum */
+    --pink: #e8457a;     /* berry pink */
+    --coral: #ff7a59;
+    --gold: #ffb627;
+    --teal: #1f9e94;
+    --panel: #24304a;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    color: var(--ink);
+    font-family: 'Gelasio', Georgia, serif;
+    text-align: center;
+    background:
+      radial-gradient(circle at 8% 12%, rgba(255,182,39,.35) 0 140px, transparent 141px),
+      radial-gradient(circle at 94% 22%, rgba(31,158,148,.22) 0 110px, transparent 111px),
+      radial-gradient(circle at 90% 88%, rgba(232,69,122,.18) 0 160px, transparent 161px),
+      radial-gradient(circle at 6% 78%, rgba(255,122,89,.20) 0 120px, transparent 121px),
+      linear-gradient(180deg, #fff6e9 0%, #ffeef0 55%, #f1f7f5 100%);
+    background-attachment: fixed;
+  }
+  /* colorful stripe across the top */
+  body::before {
+    content: "";
+    display: block;
+    height: 10px;
+    background: linear-gradient(90deg, var(--gold), var(--coral), var(--pink), #8e5bd6, var(--teal));
+  }
+  main {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 64px 20px 80px;
+  }
+  h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 800;
+    font-size: clamp(3rem, 11vw, 6.4rem);
+    line-height: 1.02;
+    margin: 0 0 24px;
+    color: #0e4a5c; /* navy teal */
+    text-shadow: 0 3px 0 rgba(14,74,92,.12);
+  }
+  .location {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    font-size: 1.6rem;
+    margin-bottom: 48px;
+  }
+  .location svg { width: 34px; height: 46px; }
+
+  /* Countdown panel */
+  .countdown {
+    position: relative;
+    display: inline-flex;
+    gap: clamp(16px, 4vw, 43px);
+    justify-content: center;
+    padding: 19px clamp(19px, 4.7vw, 48px) 15px;
+    border-radius: 12px;
+    box-shadow: 0 10px 22px rgba(43,27,61,.25);
+    border: 3px solid #fff;
+    background-color: var(--panel);
+    /* family food spread under the same dark overlay */
+    background-image:
+      linear-gradient(rgba(8,56,70,.74), rgba(8,56,70,.74)), /* navy-teal, matches the title */
+      url("food.jpg");
+    background-size: cover;
+    background-position: center 60%;
+    overflow: hidden;
+  }
+  .unit { position: relative; font-family: 'Roboto', Arial, sans-serif; text-shadow: 0 2px 8px rgba(0,0,0,.45); }
+  .num {
+    display: block;
+    font-weight: 700;
+    font-size: clamp(2.7rem, 10vw, 5rem);
+    line-height: 1;
+    color: #fff;
+    font-variant-numeric: tabular-nums;
+  }
+  .unit.days .num {
+    /* yellow → pink → teal gradient across the digits (brightened to read on the dark overlay) */
+    background: linear-gradient(90deg, #ffd23f 0%, #ff6b9a 50%, #3fd8c8 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    text-shadow: none;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,.45));
+  }
+  .label {
+    display: block;
+    margin-top: 7px;
+    color: #fff;
+    font-size: clamp(.75rem, 2.4vw, 1.27rem);
+    letter-spacing: .02em;
+    text-transform: uppercase;
+  }
+  .here {
+    display: none;
+    position: relative;
+    color: #fff;
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.4rem, 4.7vw, 2.3rem);
+    padding: 14px 0;
+  }
+  .countdown.done .unit { display: none; }
+  .countdown.done .here { display: block; }
+
+  .dates {
+    display: block;
+    width: fit-content;
+    font-size: 1.7rem;
+    margin: 26px auto 40px;
+    padding: 6px 22px;
+    color: var(--teal);
+    font-weight: 600;
+    border-bottom: 3px dotted var(--coral);
+  }
+  .dates sup { font-size: .55em; }
+
+  .poll {
+    display: inline-block;
+    padding: 14px 40px;
+    font-family: 'Gelasio', serif;
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(90deg, var(--pink), var(--coral));
+    border-radius: 999px;
+    text-decoration: none;
+    box-shadow: 0 8px 18px rgba(232,69,122,.35);
+    transition: transform .2s, box-shadow .2s;
+  }
+  .poll:hover { transform: translateY(-3px); box-shadow: 0 12px 24px rgba(232,69,122,.45); }
+
+  .family {
+    margin-top: 64px;
+  }
+  .bean-wrap {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1600 / 1114;
+    filter: drop-shadow(0 16px 24px rgba(43,27,61,.22));
+  }
+  /* colorful bean peeking out behind the photo */
+  .bean-wrap::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    clip-path: url(#bean);
+    background: linear-gradient(120deg, var(--gold), var(--coral) 45%, var(--pink) 70%, var(--teal));
+    transform: rotate(-5deg) translate(-2%, 3%) scale(1.04);
+  }
+  .bean-wrap img {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    clip-path: url(#bean);
+  }
+  /* ---------- RSVP form ---------- */
+  .rsvp {
+    margin-top: 8px;
+    padding: clamp(28px, 5vw, 48px) clamp(20px, 5vw, 52px);
+    background: #fff;
+    border-radius: 28px;
+    box-shadow: 0 18px 40px rgba(14,74,92,.14);
+    text-align: left;
+    scroll-margin-top: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .rsvp::before {
+    content: "";
+    position: absolute; left: 0; right: 0; top: 0; height: 8px;
+    background: linear-gradient(90deg, var(--gold), var(--coral), var(--pink), #8e5bd6, var(--teal));
+  }
+  .rsvp h2 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(1.9rem, 5vw, 2.6rem);
+    color: #0e4a5c;
+    margin: 0 0 6px;
+    text-align: center;
+  }
+  .rsvp-intro { text-align: center; color: #5a6b70; margin: 0 0 30px; font-size: 1.1rem; }
+  .field { margin: 0 0 26px; border: 0; padding: 0; min-width: 0; }
+  .field label, .field legend, .field .flabel {
+    display: block;
+    font-weight: 600;
+    color: #0e4a5c;
+    margin: 0 0 10px;
+    font-size: 1.08rem;
+    line-height: 1.4;
+    padding: 0;
+  }
+  .req { color: var(--pink); }
+  .rsvp input[type="text"], .rsvp select {
+    width: 100%;
+    font: inherit;
+    font-size: 1.05rem;
+    color: var(--ink);
+    padding: 12px 14px;
+    border: 2px solid #d9e6e8;
+    border-radius: 12px;
+    background: #f7fbfb;
+    transition: border-color .15s, box-shadow .15s, background .15s;
+    appearance: none;
+  }
+  .rsvp select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' stroke='%230e4a5c' stroke-width='2' fill='none'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    padding-right: 40px;
+    cursor: pointer;
+  }
+  .rsvp input[type="text"]:focus, .rsvp select:focus {
+    outline: none;
+    border-color: var(--teal);
+    background-color: #fff;
+    box-shadow: 0 0 0 4px rgba(31,158,148,.15);
+  }
+  #partySize { max-width: 200px; }
+  .pills { display: flex; gap: 12px; }
+  .pill { margin: 0 !important; cursor: pointer; }
+  .pill input { position: absolute; opacity: 0; pointer-events: none; }
+  .pill span {
+    display: inline-block;
+    min-width: 90px;
+    text-align: center;
+    padding: 10px 22px;
+    border: 2px solid #d9e6e8;
+    border-radius: 999px;
+    background: #f7fbfb;
+    font-weight: 600;
+    color: #0e4a5c;
+    transition: all .15s;
+  }
+  .pill:hover span { border-color: var(--teal); }
+  .pill input:checked + span { background: #0e4a5c; border-color: #0e4a5c; color: #fff; }
+  .pill input:focus-visible + span { box-shadow: 0 0 0 4px rgba(31,158,148,.25); }
+
+  .shirt-head, .shirt-row {
+    display: grid;
+    grid-template-columns: 34px 1fr 150px;
+    gap: 10px;
+    align-items: center;
+  }
+  .shirt-head { font-size: .85rem; color: #5a6b70; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 6px; }
+  .shirt-row { margin-bottom: 10px; animation: pop .25s ease; }
+  .shirt-num {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    display: grid; place-items: center;
+    font-weight: 700; font-size: .95rem;
+    color: #fff;
+    background: var(--teal);
+  }
+  .shirt-row:nth-child(4n+2) .shirt-num { background: var(--coral); }
+  .shirt-row:nth-child(4n+3) .shirt-num { background: var(--gold); color: #3a2a00; }
+  .shirt-row:nth-child(4n+4) .shirt-num { background: var(--pink); }
+  @keyframes pop { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+
+  .err { display: none; color: #c2185b; font-size: .95rem; margin: 8px 0 0; }
+  .field.invalid .err { display: block; }
+  .field.invalid > input[type="text"], .field.invalid select.missing { border-color: #e8457a; }
+  .field.invalid .pill span { border-color: #e8457a; }
+
+  .submit {
+    display: block;
+    width: 100%;
+    margin-top: 8px;
+    padding: 16px;
+    font: inherit;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #fff;
+    border: 0;
+    border-radius: 999px;
+    cursor: pointer;
+    background: linear-gradient(90deg, var(--pink), var(--coral));
+    box-shadow: 0 8px 18px rgba(232,69,122,.3);
+    transition: transform .2s, box-shadow .2s, opacity .2s;
+  }
+  .submit:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(232,69,122,.4); }
+  .submit:disabled { opacity: .6; cursor: wait; transform: none; }
+  .form-status { text-align: center; margin: 12px 0 0; color: #c2185b; }
+  .form-status:empty { display: none; }
+  .form-status a { color: #0e4a5c; }
+
+  .poll { border: 0; cursor: pointer; }
+  .poll[hidden], .rsvp[hidden], .thanks[hidden] { display: none; }
+  .rsvp:not([hidden]) { animation: pop .3s ease; }
+  .cancel-link {
+    display: block;
+    margin: 10px auto 0;
+    background: none;
+    border: 0;
+    font: inherit;
+    font-size: 1.05rem;
+    color: #5a6b70;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+  .cancel-link:hover { color: #0e4a5c; }
+  .thanks {
+    display: inline-block;
+    text-align: center;
+    padding: 22px 44px 26px;
+    background: #fff;
+    border-radius: 24px;
+    box-shadow: 0 14px 30px rgba(14,74,92,.14);
+    animation: pop .3s ease;
+  }
+  .thanks-emoji { font-size: 3.2rem; }
+  .thanks h3 { font-family: 'Playfair Display', serif; color: #0e4a5c; font-size: clamp(1.5rem, 4.5vw, 2rem); margin: 6px 0 0; }
+  .thanks p { color: #5a6b70; font-size: 1.1rem; }
+  .link-btn { background: none; border: 0; color: var(--teal); font: inherit; text-decoration: underline; cursor: pointer; margin-top: 6px; }
+
+  @media (max-width: 520px) {
+    .shirt-head { display: none; }
+    .shirt-row { grid-template-columns: 34px 1fr; }
+    .shirt-row select { grid-column: 2; }
+  }
+
+  footer { margin-top: 56px; color: #8a5a7a; font-size: 1.05rem; }
+</style>
+</head>
+<body>
+<main>
+  <h1>2027 Family Reunion</h1>
+
+  <div class="location">
+    <svg viewBox="0 0 24 32" aria-hidden="true"><path fill="#1f9e94"d="M12 0C5.4 0 0 5.3 0 11.9 0 20.8 12 32 12 32s12-11.2 12-20.1C24 5.3 18.6 0 12 0zm0 16.5a4.6 4.6 0 1 1 0-9.2 4.6 4.6 0 0 1 0 9.2z"/></svg>
+    Greensboro, NC
+  </div>
+
+  <div class="countdown" id="countdown" aria-live="polite">
+    <div class="unit days"><span class="num" id="days">0</span><span class="label">Days</span></div>
+    <div class="here">It's reunion time! 🎉</div>
+  </div>
+
+  <div class="dates">June 18<sup>th</sup> – 19<sup>th</sup> 2027</div>
+
+  <button type="button" class="poll" id="openRsvp">Take the Poll</button>
+
+  <section class="rsvp" id="rsvp" hidden>
+    <h2>RSVP &amp; T-Shirt Sizes</h2>
+    <p class="rsvp-intro">Help us understand your availability for planning purposes and let us know the shirt sizes for your crew.</p>
+
+    <form id="rsvpForm" novalidate>
+      <div class="field">
+        <label for="fullName">Your first and last name <span class="req">*</span></label>
+        <input type="text" id="fullName" autocomplete="name" required>
+        <p class="err">Please enter your name.</p>
+      </div>
+
+      <fieldset class="field" id="arriveField">
+        <legend>Are you and your party able to arrive on Friday 06/18/2027 before 5 pm? <span class="req">*</span></legend>
+        <div class="pills">
+          <label class="pill"><input type="radio" name="arrive" value="Yes"><span>Yes</span></label>
+          <label class="pill"><input type="radio" name="arrive" value="No"><span>No</span></label>
+        </div>
+        <p class="err">Please choose Yes or No.</p>
+      </fieldset>
+
+      <div class="field">
+        <label for="partySize">How many people are in your party? <span class="req">*</span></label>
+        <select id="partySize" required>
+          <option value="">Choose…</option>
+          <option>1</option><option>2</option><option>3</option><option>4</option>
+          <option>5</option><option>6</option><option>7</option><option>8</option>
+        </select>
+        <p class="err">Please choose your party size.</p>
+      </div>
+
+      <div class="field" id="shirtsField" hidden>
+        <p class="flabel">T-shirt sizes <span class="req">*</span></p>
+        <div class="shirt-head" aria-hidden="true"><span></span><span>Full name</span><span>Size</span></div>
+        <div id="shirtRows"></div>
+        <p class="err">Please pick a shirt size for everyone in your party.</p>
+      </div>
+
+      <button type="submit" class="submit">Send my RSVP</button>
+      <p class="form-status" id="formStatus" role="status"></p>
+      <button type="button" class="cancel-link" id="cancelRsvp">Cancel</button>
+    </form>
+
+  </section>
+
+  <div class="thanks" id="thanks" role="status" hidden>
+    <div class="thanks-emoji">🎉</div>
+    <h3>Thank you for your response!</h3>
+  </div>
+
+  <!-- Kidney-bean shape used to mask the family photo -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <clipPath id="bean" clipPathUnits="objectBoundingBox">
+      <path d="M0.140,0.090 C0.210,0.013 0.317,0.018 0.420,0.020 C0.523,0.022 0.668,0.020 0.760,0.100 C0.852,0.180 0.945,0.373 0.970,0.500 C0.995,0.627 0.988,0.778 0.910,0.860 C0.832,0.942 0.635,0.987 0.500,0.990 C0.365,0.993 0.183,0.965 0.100,0.880 C0.017,0.795 -0.007,0.612 0.000,0.480 C0.007,0.348 0.070,0.167 0.140,0.090 Z"/>
+    </clipPath>
+  </svg>
+
+  <section class="family">
+    <div class="bean-wrap">
+      <!-- The photo file family.jpg sits next to this page -->
+      <img src="family.jpg" alt="Our family together on the lawn">
+    </div>
+  </section>
+
+
+  <footer>We can't wait to see everyone! ❤️</footer>
+</main>
+
+<script>
+  // Reunion starts June 18, 2027 (Greensboro is on Eastern Time)
+  const target = new Date('2027-06-18T00:00:00-04:00');
+
+  function update() {
+    const now = new Date();
+    const box = document.getElementById('countdown');
+    if (now >= target) { box.classList.add('done'); return; }
+
+    const days = Math.ceil((target - now) / 86400000);
+
+    document.getElementById('days').textContent = days;
+  }
+
+  update();
+  setInterval(update, 60000);
+
+  /* ---------- RSVP form → Google Form ---------- */
+  const FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSdbE07oyiNIMPSNqrhkzBrepa64EOclNhEeln-4miGa7TBMxA/formResponse';
+  const GOOGLE_FORM_LINK = 'https://docs.google.com/forms/d/e/1FAIpQLSdbE07oyiNIMPSNqrhkzBrepa64EOclNhEeln-4miGa7TBMxA/viewform';
+  const ENTRY = {
+    name:      'entry.1393480597',
+    arrive:    'entry.1750073019',
+    partySize: 'entry.537970590',
+    // T-shirt grid rows: Person 1 … Person 8
+    sizes: ['entry.963271680','entry.1399555648','entry.800207328','entry.1121847822',
+            'entry.277582789','entry.2038638142','entry.849575376','entry.30140809'],
+    // Person 1 … Person 8 Full Name
+    names: ['entry.1192823408','entry.362835271','entry.338884910','entry.437224211',
+            'entry.45283558','entry.1243364464','entry.2124900691','entry.582814628']
+  };
+  const SIZES = ['XS','S','M','L','XL','XXL','XXXL','XXXXL'];
+
+  const form = document.getElementById('rsvpForm');
+  const fullName = document.getElementById('fullName');
+  const partySize = document.getElementById('partySize');
+  const shirtsField = document.getElementById('shirtsField');
+  const shirtRows = document.getElementById('shirtRows');
+  const statusEl = document.getElementById('formStatus');
+  const thanks = document.getElementById('thanks');
+
+  function renderRows() {
+    const n = parseInt(partySize.value, 10) || 0;
+    // keep what people already typed
+    const saved = [...shirtRows.children].map(r => ({
+      name: r.querySelector('input').value, size: r.querySelector('select').value
+    }));
+    shirtRows.innerHTML = '';
+    for (let i = 0; i < n; i++) {
+      const row = document.createElement('div');
+      row.className = 'shirt-row';
+      row.innerHTML =
+        `<span class="shirt-num">${i + 1}</span>` +
+        `<input type="text" placeholder="Person ${i + 1} full name" aria-label="Person ${i + 1} full name">` +
+        `<select aria-label="Person ${i + 1} shirt size"><option value="">Size…</option>` +
+        SIZES.map(s => `<option>${s}</option>`).join('') + `</select>`;
+      if (saved[i]) {
+        row.querySelector('input').value = saved[i].name;
+        row.querySelector('select').value = saved[i].size;
+      } else if (i === 0 && fullName.value.trim()) {
+        row.querySelector('input').value = fullName.value.trim();
+      }
+      shirtRows.appendChild(row);
+    }
+    shirtsField.hidden = n === 0;
+    shirtsField.classList.remove('invalid');
+  }
+  partySize.addEventListener('change', () => { partySize.closest('.field').classList.remove('invalid'); renderRows(); });
+  fullName.addEventListener('input', () => fullName.closest('.field').classList.remove('invalid'));
+  form.querySelectorAll('input[name="arrive"]').forEach(r =>
+    r.addEventListener('change', () => document.getElementById('arriveField').classList.remove('invalid')));
+  shirtRows.addEventListener('change', e => {
+    if (e.target.value) e.target.classList.remove('missing');
+    if (![...shirtRows.querySelectorAll('select')].some(s => !s.value)) shirtsField.classList.remove('invalid');
+  });
+
+  function validate() {
+    let ok = true, first = null;
+    const flag = (el, bad) => { el.classList.toggle('invalid', bad); if (bad) { ok = false; first = first || el; } };
+    flag(fullName.closest('.field'), !fullName.value.trim());
+    flag(document.getElementById('arriveField'), !form.querySelector('input[name="arrive"]:checked'));
+    flag(partySize.closest('.field'), !partySize.value);
+    let missing = false;
+    shirtRows.querySelectorAll('select').forEach(s => { const m = !s.value; s.classList.toggle('missing', m); if (m) missing = true; });
+    if (partySize.value) flag(shirtsField, missing);
+    if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return ok;
+  }
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    statusEl.textContent = '';
+    if (!validate()) return;
+
+    const data = new URLSearchParams();
+    data.append(ENTRY.name, fullName.value.trim());
+    data.append(ENTRY.arrive, form.querySelector('input[name="arrive"]:checked').value);
+    data.append(ENTRY.partySize, partySize.value);
+    [...shirtRows.children].forEach((row, i) => {
+      const nm = row.querySelector('input').value.trim();
+      const sz = row.querySelector('select').value;
+      if (sz) data.append(ENTRY.sizes[i], sz);
+      if (nm) data.append(ENTRY.names[i], nm);
+    });
+
+    const btn = form.querySelector('.submit');
+    btn.disabled = true; btn.textContent = 'Sending…';
+    try {
+      // Google doesn't allow reading the reply from another site, so "no-cors" is expected here.
+      await fetch(FORM_URL, { method: 'POST', mode: 'no-cors', body: data });
+      rsvp.hidden = true;
+      openBtn.hidden = true;
+      thanks.hidden = false;
+      thanks.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } catch (err) {
+      statusEl.innerHTML = `Hmm, that didn't go through. Please try again, or <a href="${GOOGLE_FORM_LINK}" target="_blank" rel="noopener">fill out the Google Form directly</a>.`;
+    } finally {
+      btn.disabled = false; btn.textContent = 'Send my RSVP';
+    }
+  });
+
+  const openBtn = document.getElementById('openRsvp');
+  const rsvp = document.getElementById('rsvp');
+  openBtn.addEventListener('click', () => {
+    openBtn.hidden = true;
+    rsvp.hidden = false;
+    rsvp.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    setTimeout(() => fullName.focus({ preventScroll: true }), 400);
+  });
+  document.getElementById('cancelRsvp').addEventListener('click', () => {
+    form.reset(); renderRows(); statusEl.textContent = '';
+    form.querySelectorAll('.invalid').forEach(el => el.classList.remove('invalid'));
+    rsvp.hidden = true;
+    openBtn.hidden = false;
+    openBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
+</script>
+</body>
+</html>
